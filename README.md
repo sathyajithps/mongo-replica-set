@@ -1,5 +1,7 @@
 # MongoDB Replica Set
 
+Forked from **https://github.com/CandisIO/mongo-replica-set**
+
 A Replica Set of MongoDB running in a Docker container
 
 ## Not For Production
