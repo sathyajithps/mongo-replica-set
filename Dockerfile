@@ -1,15 +1,23 @@
-FROM ubuntu:20.04 as base
+FROM ubuntu:18.04 as base
 
+# MongoDB Shell download URL
+ARG SH_URL=https://downloads.mongodb.com/compass/mongosh-1.5.0-linux-x64.tgz
 # MongoDB download URL
-ARG DB_URL=https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-5.0.6.tgz
+ARG DB_URL=https://fastdl.mongodb.org/linux/mongodb-linux-x86_64-ubuntu1804-6.0.0-rc8.tgz
 
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install -y curl && \
+    curl -OL ${SH_URL} && \
     curl -OL ${DB_URL} && \
-    tar -zxvf mongodb-linux-x86_64-ubuntu1804-5.0.6.tgz && \
-    mv ./mongodb-linux-x86_64-ubuntu1804-5.0.6/bin/* /usr/local/bin/ && \
-    rm -rf ./mongodb-linux-x86_64-ubuntu1804-5.0.6 && rm ./mongodb-linux-x86_64-ubuntu1804-5.0.6.tgz
+    tar -zxvf mongosh-1.5.0-linux-x64.tgz && \
+    tar -zxvf mongodb-linux-x86_64-ubuntu1804-6.0.0-rc8.tgz && \
+    mv ./mongosh-1.5.0-linux-x64/bin/mongosh /usr/local/bin/ && \
+    mv ./mongosh-1.5.0-linux-x64/bin/mongosh_crypt_v1.so /usr/local/lib/ && \
+    mv ./mongodb-linux-x86_64-ubuntu1804-6.0.0-rc8/bin/* /usr/local/bin/ && \
+    ln -s $(pwd)/bin/* /usr/local/bin/ && \
+    rm -rf ./mongosh-1.5.0-linux-x64 && rm ./mongosh-1.5.0-linux-x64.tgz && \
+    rm -rf ./mongodb-linux-x86_64-ubuntu1804-6.0.0-rc8 && rm ./mongodb-linux-x86_64-ubuntu1804-6.0.0-rc8.tgz
 
 COPY ./init-mongodbs.sh ./init-replica.sh ./entry-point.sh /
 
